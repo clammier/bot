@@ -22,6 +22,7 @@ Class Bot {
 			$this->snoopy->submit("http://reddit.com/api/login/".$this->User['user'], $this->User);
 
 			$login = json_decode($this->snoopy->results);
+			var_dump($login);
 			$this->snoopy->cookies['reddit_session'] = $login->json->data->cookie;
 
 			$this->cache->set('uh', $login->json->data->modhash);
@@ -134,11 +135,13 @@ Class Bot {
 	}
 
 	protected function post($description) {
+		
 		$this->login();
 
 		$this->snoopy->fetch('http://reddit.com/r/vodsprivate/about/edit/.json');
 		$about = json_decode($this->snoopy->results);
 		$data = $about->data;
+		var_dump($about);
 
 		$parameters['sr'] = 't5_2yytc';
 		$parameters['title'] = $data->title;
@@ -164,6 +167,7 @@ Class Bot {
 		$parameters['uh'] = $this->cache->get('uh');
 
 		$this->snoopy->submit("http://www.reddit.com/api/site_admin?api_type=json", $parameters);
+		var_dump(json_decode($this->snoopy->results));
 		print "\n\n" . date("[Y/M/d - H:i]: <br>") . $this->snoopy->results;
 	}
 
